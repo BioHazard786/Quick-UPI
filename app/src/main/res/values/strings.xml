@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Quick UPI</string>
+    <string name="quick_tile_title">Quick UPI</string>
+    <string name="quick_tile_subtitle">Tap to generate QR</string>
+</resources>

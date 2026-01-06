@@ -1,0 +1,89 @@
+name: Android Release Build
+
+on:
+  push:
+    tags:
+      - "*"
+
+env:
+  JAVA_VERSION: "17"
+  KEYSTORE_FILE: "release.jks"
+
+jobs:
+  release:
+    name: Build & Release APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Setup Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Decode Keystore
+        run: |
+          mkdir -p keystore
+          echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > keystore/${{ env.KEYSTORE_FILE }}
+
+      - name: Generate keystore.properties
+        run: |
+          cat <<EOF > keystore.properties
+          storeFile=keystore/${{ env.KEYSTORE_FILE }}
+          storePassword=${{ secrets.KEYSTORE_PASSWORD }}
+          keyAlias=${{ secrets.KEY_ALIAS }}
+          keyPassword=${{ secrets.KEY_PASSWORD }}
+          EOF
+
+      - name: Build Universal Release APK
+        run: ./gradlew assembleRelease
+
+      - name: Resolve versionCode
+        id: version
+        run: |
+          VERSION_CODE=$(grep -m1 "versionCode =" app/build.gradle.kts | awk '{print $3}')
+          echo "code=$VERSION_CODE" >> $GITHUB_OUTPUT
+
+      - name: Prepare Release Notes
+        id: notes
+        run: |
+          FILE="fastlane/metadata/android/en-US/changelogs/${{ steps.version.outputs.code }}.txt"
+
+          echo "body<<EOF" >> $GITHUB_OUTPUT
+          echo "# 🚀 Quick UPI ${{ github.ref_name }}" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+
+          if [ -f "$FILE" ]; then
+            cat "$FILE" >> $GITHUB_OUTPUT
+          else
+            echo "- Improvements and bug fixes" >> $GITHUB_OUTPUT
+          fi
+
+          echo "" >> $GITHUB_OUTPUT
+          echo "## 📦 Installation" >> $GITHUB_OUTPUT
+          echo "1. Download the APK" >> $GITHUB_OUTPUT
+          echo "2. Enable *Install from unknown sources*" >> $GITHUB_OUTPUT
+          echo "3. Install and receive payment instantly" >> $GITHUB_OUTPUT
+          echo "" >> $GITHUB_OUTPUT
+          echo "## 📋 Requirements" >> $GITHUB_OUTPUT
+          echo "- Android 7.0 (API 24)+ " >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ github.ref_name }}
+          name: "Quick UPI ${{ github.ref_name }}"
+          body: ${{ steps.notes.outputs.body }}
+          draft: false
+          prerelease: false
+          artifacts: |
+            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/release/output-metadata.json

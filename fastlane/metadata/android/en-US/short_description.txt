@@ -1,0 +1,1 @@
+Instant UPI QR code generator via Quick Settings Tile. Fast, private, open source.

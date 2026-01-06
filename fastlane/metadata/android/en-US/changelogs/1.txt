@@ -1,0 +1,7 @@
+v0.0.1 – Initial Release
+- 🚀 Added Quick Settings Tile for instant access.
+- 💸 Quickly generate UPI QR codes with custom amounts.
+- 📝 Support for adding transaction notes.
+- 🧠 "Recent Amounts" chips for faster entry.
+- 🎨 Beautiful Material 3 Design.
+- 🔒 Privacy-first: No internet required to generate codes.

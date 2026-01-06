@@ -1,0 +1,25 @@
+Stop fumbling. Start receiving.
+
+Quick UPI is the fastest way to request payments on Android. Forget opening heavy banking apps, navigating endless menus, and waiting for server connections just to show your QR code.
+
+Simply swipe down, tap the Quick Settings Tile, enter an amount, and boom—you're ready to get paid.
+
+🚀 USE CASES:
+• The "Split Bill" Speedster: Flash a custom QR for exactly your share before friends can even unlock their phones.
+• Delivery Agents: Generate exact amount QRs instantly. No more disputes over change.
+• Taxi & Auto Drivers: Create dynamic QRs for every ride.
+• Small Shop Owners: Type amount, show QR, next customer.
+• Privacy Pro: Receive payments without shouting your phone number.
+
+✨ FEATURES:
+• Quick Settings Tile: Instant access from your notification shade.
+• Zero Lag: App opens instantly.
+• Custom Amounts & Notes: Add context like "Dinner" or "Cab".
+• Recent Amounts: Smart chips remember your frequent values.
+• Offline Generation: No internet required to create the QR code.
+• Material 3 Design: Sleek, modern, and beautiful.
+• Privacy First: Your data stays on your device.
+
+The app is completely open source and respects your privacy. No ads, no tracking.
+
+Inspired by the simplicity of WhatsAppNoContact.
