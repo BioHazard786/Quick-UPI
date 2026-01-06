@@ -5,6 +5,9 @@ on:
     tags:
       - "*"
 
+permissions:
+  contents: write
+
 env:
   JAVA_VERSION: "17"
   KEYSTORE_FILE: "release.jks"
