@@ -28,7 +28,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.SuggestionChip
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
@@ -54,7 +53,7 @@ import kotlinx.coroutines.launch
 sealed interface QuickUpiUiState {
     data object Setup : QuickUpiUiState
     data class EnterAmount(val upiId: String) : QuickUpiUiState
-    data class ShowQr(val amount: String, val qrBitmap: Bitmap) : QuickUpiUiState
+    data class ShowQr(val amount: String, val qrBitmap: Bitmap, val upiId: String) : QuickUpiUiState
 }
 
 @Composable
@@ -124,7 +123,7 @@ fun QuickUpiApp(
                 payeeURL.toString(), 1024, 1024
             )
 
-            uiState = QuickUpiUiState.ShowQr(amount, bitmap)
+            uiState = QuickUpiUiState.ShowQr(amount, bitmap, savedUpiId ?: "")
         },
         onResetUpi = {
             scope.launch {
@@ -258,7 +257,8 @@ fun QuickUpiContent(
 
                         Button(
                             onClick = { onSaveUpi(newUpiInput, newPayeeNameInput) },
-                            enabled = isUpiValid
+                            enabled = isUpiValid,
+                            modifier = Modifier.fillMaxWidth()
                         ) { Text("Save & Continue") }
                     }
 
@@ -348,11 +348,13 @@ fun QuickUpiContent(
                                 if (isAmountValid) {
                                     onGenerateQr(amountInput, noteInput)
                                 }
-                            }, enabled = isAmountValid
+                            }, enabled = isAmountValid, modifier = Modifier.fillMaxWidth()
                         ) { Text("Generate QR Code") }
 
                         Spacer(modifier = Modifier.height(8.dp))
-                        TextButton(onClick = { onResetUpi() }) { Text("Reset UPI ID") }
+                        OutlinedButton(
+                            onClick = { onResetUpi() }, modifier = Modifier.fillMaxWidth()
+                        ) { Text("Reset UPI ID") }
                     }
 
                     // VIEW 3: QR Code Display
@@ -386,6 +388,11 @@ fun QuickUpiContent(
                                 text = "Scan to Pay", style = MaterialTheme.typography.headlineSmall
                             )
                         }
+
+                        Spacer(modifier = Modifier.height(8.dp))
+                        Text(
+                            text = uiState.upiId, style = MaterialTheme.typography.titleMedium
+                        )
 
                         Spacer(modifier = Modifier.height(24.dp))
                         Spacer(modifier = Modifier.height(24.dp))

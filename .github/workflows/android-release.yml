@@ -83,10 +83,10 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           tag: ${{ github.ref_name }}
-          name: "Quick UPI ${{ github.ref_name }}"
+          name: "Release ${{ github.ref_name }}"
           body: ${{ steps.notes.outputs.body }}
           draft: false
           prerelease: false
           artifacts: |
-            app/build/outputs/apk/release/app-release.apk
+            app/build/outputs/apk/release/app-release.apk=>quick-upi-${{ github.ref_name }}.apk
             app/build/outputs/apk/release/output-metadata.json

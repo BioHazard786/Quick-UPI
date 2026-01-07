@@ -1,0 +1,6 @@
+v0.0.2 – Polished & Smarter
+- 🧠 Enhanced Smart Chips: Now tracks your last 3 unique payments for quicker access.
+- 🔓 Flexible Payments: "Amount" is now optional – generate open QRs.
+- 🌞 Brightness Fix: Screen brightness now auto-resets after closing the QR.
+- 🧹 UI Cleanup: Added 'Clear' buttons to inputs and expanded button touch targets.
+- 🆔 Visible UPI ID: Your ID is now displayed on the QR screen for confirmation.

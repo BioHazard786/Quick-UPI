@@ -8,6 +8,19 @@ Quick UPI is the fastest way to request payments on Android. No more opening hea
 1.  Tap the **App Icon** for standard access.
 2.  Swipe down and tap the **Quick Settings Tile** for instant access anywhere.
 
+## 📲 Download
+<div align="center">
+   <a href="https://github.com/BioHazard786/Quick-UPI/releases">
+      <img src="extras/get-it-on-github.png" width="170">
+   </a>
+   <!-- <a href="https://www.openapk.net/quickupi/com.biohazard786.quickupi/">
+      <img src="https://www.openapk.net/images/openapk-badge.png" width="170">
+   </a> -->
+   <a href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/BioHazard786/Quick-UPI/">
+      <img src="extras/get-it-on-obtainium.png" width="170">
+   </a>
+</div>
+
 ## 🚀 Use Cases
 *   **📦 Delivery Agents:** Collecting Cash-on-Delivery? Generate a QR for the exact amount in seconds. No more "change nahi hai" disputes.
 *   **🚖 Taxi & Auto Drivers:** "Sir, ₹123 hua." Generate a dynamic QR for every ride instead of using a static sticker.
@@ -32,12 +45,19 @@ Quick UPI is the fastest way to request payments on Android. No more opening hea
 ## 💡 Inspiration
 This project was inspired by the simplicity and utility of [WhatsAppNoContact](https://github.com/theolm/WhatsAppNoContact). Just like it solves the friction of messaging without saving contacts, **Quick UPI** solves the friction of receiving payments without navigation.
 
+## 📱 Demo
+
+| **Quick App Launch** | **Quick Settings Tile** |
+|:---:|:---:|
+| <img src="extras/preview_1.gif" width="300" /> | <img src="extras/preview_2.gif" width="300" /> |
+
 ## 📸 Screenshots
-*(Add your screenshots/GIFs here)*
-<!-- 
-<img src="screenshots/tile_demo.gif" width="300" />
-<img src="screenshots/app_ui.png" width="300" />
--->
+
+| | | |
+|:---:|:---:|:---:|
+| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.jpg" width="200" /> | <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.jpg" width="200" /> | <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.jpg" width="200" /> |
+| <img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.jpg" width="200" /> | | |
+
 
 ## 📥 How to Use
 1.  **Install the App**.
@@ -60,3 +80,7 @@ Issues and Pull Requests are welcome! If you have an idea to make it even faster
 
 ## 📜 License
 [MIT](LICENSE)
+
+## 📞 Contact
+
+Mohd Zaid - [Telegram](https://t.me/LuLu786) - [message@zaid.qzz.io](mailto:message@zaid.qzz.io)
