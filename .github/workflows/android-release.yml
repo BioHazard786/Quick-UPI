@@ -79,6 +79,11 @@ jobs:
           echo "- Android 7.0 (API 24)+ " >> $GITHUB_OUTPUT
           echo "EOF" >> $GITHUB_OUTPUT
 
+      - name: Rename APK
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk \
+            app/build/outputs/apk/release/quick-upi-${{ github.ref_name }}.apk
+
       - name: Create GitHub Release
         uses: ncipollo/release-action@v1
         with:
@@ -88,5 +93,5 @@ jobs:
           draft: false
           prerelease: false
           artifacts: |
-            app/build/outputs/apk/release/app-release.apk=>quick-upi-${{ github.ref_name }}.apk
+            app/build/outputs/apk/release/quick-upi-${{ github.ref_name }}.apk
             app/build/outputs/apk/release/output-metadata.json
