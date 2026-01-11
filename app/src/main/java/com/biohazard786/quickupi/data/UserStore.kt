@@ -3,6 +3,7 @@ package com.biohazard786.quickupi.data
 import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
@@ -19,6 +20,7 @@ class UserStore(private val context: Context) {
         val UPI_ID_KEY = stringPreferencesKey("upi_id")
         val PAYEE_NAME_KEY = stringPreferencesKey("payee_name")
         val RECENT_AMOUNTS_KEY = stringPreferencesKey("recent_amounts")
+        val SHOW_UPI_ID_KEY = booleanPreferencesKey("show_upi_id")
     }
 
     // Get the UPI ID
@@ -34,6 +36,9 @@ class UserStore(private val context: Context) {
             serialized.split(",").filter { it.isNotBlank() }
         }
 
+    val showUpiId: Flow<Boolean> =
+        context.dataStore.data.map { preferences -> preferences[SHOW_UPI_ID_KEY] ?: true }
+
     // Save the UPI ID
     // This is a 'suspend' function, meaning it's asynchronous
     suspend fun saveUpiId(id: String) {
@@ -42,6 +47,10 @@ class UserStore(private val context: Context) {
 
     suspend fun savePayeeName(name: String) {
         context.dataStore.edit { preferences -> preferences[PAYEE_NAME_KEY] = name }
+    }
+
+    suspend fun saveShowUpiId(show: Boolean) {
+        context.dataStore.edit { preferences -> preferences[SHOW_UPI_ID_KEY] = show }
     }
 
     suspend fun saveRecentAmount(amount: String) {

@@ -1,0 +1,6 @@
+v1.0.0 – Settings & Sharing
+- ⚙️ New Settings Menu: Access toggle for UPI ID visibility, Donate, and GitHub links.
+- 📸 Share QR: You can now share your generated QR code image directly with others.
+- 🫣 Hide UPI ID: Added a toggle to show/hide your UPI ID on the QR screen for privacy.
+- 🛡️ Safer Reset: Added a confirmation dialog when resetting your UPI ID to prevent accidents.
+- 🔧 Under the hood: Significant code refactoring for better performance and maintainability.
