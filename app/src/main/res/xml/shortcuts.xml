@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="show_qr"
+        android:enabled="true"
+        android:icon="@drawable/ic_qr_code_2"
+        android:shortcutShortLabel="@string/app_name"
+        android:shortcutLongLabel="@string/shortcut_long_label">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="com.biohazard786.quickupi"
+            android:targetClass="com.biohazard786.quickupi.ui.WidgetQrActivity" />
+    </shortcut>
+</shortcuts>

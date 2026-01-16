@@ -26,6 +26,7 @@ fun ShowQrScreen(
     upiId: String,
     payeeName: String,
     showUpiId: Boolean,
+    showShareButton: Boolean = true,
     onQrShown: () -> Unit,
     onRestoreBrightness: () -> Unit,
     onDismiss: () -> Unit
@@ -73,18 +74,20 @@ fun ShowQrScreen(
 
     Spacer(modifier = Modifier.height(16.dp))
 
-    Button(
-        onClick = {
-            ShareUtils.shareQrCode(
-                context,
-                qrBitmap,
-                payeeName,
-                upiId,
-                amount,
-                showUpiId
-            )
-        }, modifier = Modifier.fillMaxWidth()
-    ) { Text("Share QR Code") }
+    if (showShareButton) {
+        Button(
+            onClick = {
+                ShareUtils.shareQrCode(
+                    context,
+                    qrBitmap,
+                    payeeName,
+                    upiId,
+                    amount,
+                    showUpiId
+                )
+            }, modifier = Modifier.fillMaxWidth()
+        ) { Text("Share QR Code") }
+    }
 
     Spacer(modifier = Modifier.height(4.dp))
 

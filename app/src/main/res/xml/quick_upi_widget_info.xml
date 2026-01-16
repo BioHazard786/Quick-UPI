@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/shortcut_long_label"
+    android:initialLayout="@layout/glance_default_loading_layout"
+    android:minWidth="60dp"
+    android:minHeight="60dp"
+    android:previewImage="@drawable/widget_preview"
+    android:resizeMode="none"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen|keyguard" />

@@ -1,0 +1,5 @@
+v1.1.0 - New Features:
+- 🚀 1x1 Home Screen Widget: Instantly access your UPI QR code right from your home screen.
+- ⚡ App Shortcuts: Long-press the app icon to quickly "Show QR Code".
+- 🔒 Lock Screen Support: You can now add the Quick UPI widget to your lock screen (on supported devices like Samsung or Android 16+).
+- 🎨 UI Enhancements: Improved the look and feel of the quick access screen.

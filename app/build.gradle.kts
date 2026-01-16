@@ -22,8 +22,8 @@ android {
         applicationId = "com.biohazard786.quickupi"
         minSdk = 26
         targetSdk = 36
-        versionCode = 3
-        versionName = "1.0.0"
+        versionCode = 4
+        versionName = "1.1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -116,4 +116,8 @@ dependencies {
 
     // QR Code Generation
     implementation("com.google.zxing:core:3.5.4")
+
+    // Jetpack Glance (Widgets)
+    implementation("androidx.glance:glance-appwidget:1.1.1")
+    implementation("androidx.glance:glance-material3:1.1.1")
 }
