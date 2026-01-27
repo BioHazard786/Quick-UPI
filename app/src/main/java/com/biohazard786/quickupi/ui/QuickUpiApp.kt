@@ -43,10 +43,11 @@ import kotlinx.coroutines.launch
 
 sealed interface QuickUpiUiState {
     data object Setup : QuickUpiUiState
-    data class EnterAmount(val upiId: String) : QuickUpiUiState
+    data class EnterAmount(val upiIds: List<String>) : QuickUpiUiState
     data class ShowQr(
         val amount: String, val qrBitmap: Bitmap, val upiId: String, val payeeName: String
     ) : QuickUpiUiState
+
     data object Settings : QuickUpiUiState
 }
 
@@ -58,7 +59,10 @@ fun QuickUpiApp(
     onDismiss: () -> Unit = {}
 ) {
     // 1. STATE (useState)
-    val savedUpiId by userStore.upiId.collectAsState(initial = null)
+    val savedUpiIds by userStore.upiIds.collectAsState(initial = emptyList())
+    // Keep legacy for safety if needed, but we rely on upiIds now
+    // val savedUpiId by userStore.upiId.collectAsState(initial = null) 
+
     val savedPayeeName by userStore.payeeName.collectAsState(initial = null)
     val recentAmounts by userStore.recentAmounts.collectAsState(initial = emptyList())
     val showUpiId by userStore.showUpiId.collectAsState(initial = true)
@@ -67,24 +71,29 @@ fun QuickUpiApp(
     var uiState by remember { mutableStateOf<QuickUpiUiState>(QuickUpiUiState.Setup) }
 
     // Sync UI state with store
-    LaunchedEffect(savedUpiId) {
-        uiState = if (savedUpiId.isNullOrBlank()) {
+    LaunchedEffect(savedUpiIds) {
+        uiState = if (savedUpiIds.isEmpty()) {
             QuickUpiUiState.Setup
         } else {
-            QuickUpiUiState.EnterAmount(savedUpiId!!)
+            QuickUpiUiState.EnterAmount(savedUpiIds)
         }
     }
 
     QuickUpiContent(
         uiState = uiState,
         recentAmounts = recentAmounts,
+        upiIds = savedUpiIds,
         showUpiId = showUpiId,
-        onSaveUpi = { upi, name ->
+        onSaveUpiIds = { upiIds, name ->
             scope.launch {
-                userStore.saveUpiId(upi)
+                userStore.saveUpiIds(upiIds)
                 userStore.savePayeeName(name)
+                // Force navigation even if data hasn't changed
+                if (upiIds.isNotEmpty()) {
+                    uiState = QuickUpiUiState.EnterAmount(upiIds)
+                }
             }
-        }, onGenerateQr = { amount, note ->
+        }, onGenerateQr = { amount, note, selectedUpiId ->
             if (amount.isNotBlank()) {
                 scope.launch {
                     userStore.saveRecentAmount(amount)
@@ -92,14 +101,14 @@ fun QuickUpiApp(
             }
 
             val uriBuilder =
-                Uri.Builder().scheme("upi").authority("pay").appendQueryParameter("pa", savedUpiId)
+                Uri.Builder().scheme("upi").authority("pay")
+                    .appendQueryParameter("pa", selectedUpiId)
                     // Only append amount if it's not empty
                     .apply {
                         if (amount.isNotBlank()) {
                             appendQueryParameter("am", amount)
                         }
                     }.appendQueryParameter("cu", "INR")
-                    .appendQueryParameter("tr", "TXN_${System.currentTimeMillis()}")
 
             // Optional: Payee Name
             if (!savedPayeeName.isNullOrBlank()) {
@@ -118,13 +127,11 @@ fun QuickUpiApp(
             )
 
             uiState = QuickUpiUiState.ShowQr(
-                amount, bitmap, savedUpiId ?: "", savedPayeeName ?: ""
+                amount, bitmap, selectedUpiId, savedPayeeName ?: ""
             )
         }, onResetUpi = {
-            scope.launch {
-                userStore.saveUpiId("")
-                userStore.savePayeeName("")
-            }
+            // Navigate to Setup screen to allow managing IDs instead of clearing them immediately
+            uiState = QuickUpiUiState.Setup
         }, onToggleShowUpiId = { show ->
             scope.launch {
                 userStore.saveShowUpiId(show)
@@ -132,8 +139,8 @@ fun QuickUpiApp(
         }, onSettingsClick = {
             uiState = QuickUpiUiState.Settings
         }, onBackToHome = {
-            uiState = if (!savedUpiId.isNullOrBlank()) {
-                QuickUpiUiState.EnterAmount(savedUpiId!!)
+            uiState = if (savedUpiIds.isNotEmpty()) {
+                QuickUpiUiState.EnterAmount(savedUpiIds)
             } else {
                 QuickUpiUiState.Setup
             }
@@ -146,11 +153,12 @@ fun QuickUpiApp(
 fun QuickUpiContent(
     uiState: QuickUpiUiState,
     recentAmounts: List<String> = emptyList(),
+    upiIds: List<String> = emptyList(),
     showUpiId: Boolean = true,
 
     // Actions (events)
-    onSaveUpi: (String, String) -> Unit,
-    onGenerateQr: (String, String) -> Unit,
+    onSaveUpiIds: (List<String>, String) -> Unit,
+    onGenerateQr: (String, String, String) -> Unit,
     onResetUpi: () -> Unit,
     onToggleShowUpiId: (Boolean) -> Unit,
     onSettingsClick: () -> Unit,
@@ -220,18 +228,20 @@ fun QuickUpiContent(
                 when (uiState) {
                     QuickUpiUiState.Setup -> {
                         SetupScreen(
-                            showUpiId = showUpiId,
-                            onSaveUpi = onSaveUpi,
-                            onToggleShowUpiId = onToggleShowUpiId
+                            upiIds = upiIds,
+                            onSaveUpiIds = onSaveUpiIds,
                         )
                     }
+
                     is QuickUpiUiState.EnterAmount -> {
                         EnterAmountScreen(
                             recentAmounts = recentAmounts,
+                            upiIds = uiState.upiIds,
                             onGenerateQr = onGenerateQr,
                             onResetUpi = onResetUpi
                         )
                     }
+
                     is QuickUpiUiState.ShowQr -> {
                         ShowQrScreen(
                             amount = uiState.amount,
@@ -244,11 +254,11 @@ fun QuickUpiContent(
                             onDismiss = onDismiss
                         )
                     }
+
                     QuickUpiUiState.Settings -> {
                         SettingsScreen(
                             showUpiId = showUpiId,
-                            onToggleShowUpiId = onToggleShowUpiId,
-                            onResetUpi = onResetUpi
+                            onToggleShowUpiId = onToggleShowUpiId
                         )
                     }
                 }

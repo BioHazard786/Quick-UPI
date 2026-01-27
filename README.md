@@ -10,6 +10,9 @@ Quick UPI is the fastest way to request payments on Android. No more opening hea
 
 ## 📲 Download
 <div align="center">
+   <a href="https://apt.izzysoft.de/fdroid/index/apk/com.biohazard786.quickupi">
+      <img src="https://gitlab.com/IzzyOnDroid/repo/-/raw/master/assets/IzzyOnDroid.png" width="170">
+   </a>
    <a href="https://github.com/BioHazard786/Quick-UPI/releases">
       <img src="extras/get-it-on-github.png" width="170">
    </a>

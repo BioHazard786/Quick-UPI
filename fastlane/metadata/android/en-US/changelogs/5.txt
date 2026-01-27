@@ -1,0 +1,6 @@
+v1.2.0 - Multiple UPI IDs & UI Refresh:
+- 💳 Multiple UPI IDs: Support for up to 3 UPI IDs! Switch between your business or personal accounts seamlessly.
+- 🔽 Smart Dropdown: A new dropdown appears when you have multiple IDs, letting you choose where to receive money instantly.
+- 🛠️ Revamped Setup: A completely redesigned, card-style interface to easily add, view, and manage your IDs.
+- 🛡️ Safer Reset: Resetting now takes you to the manager screen instead of wiping everything, preventing accidental data loss.
+- ✨ Visual Polish: Enjoy smoother animations, smarter input validation, and a cleaner look.

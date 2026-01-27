@@ -17,16 +17,30 @@ class UserStore(private val context: Context) {
 
     // Define the keys (like keys in localStorage)
     companion object {
-        val UPI_ID_KEY = stringPreferencesKey("upi_id")
+        val UPI_ID_KEY = stringPreferencesKey("upi_id") // Legacy
+        val UPI_IDS_KEY = stringPreferencesKey("upi_ids") // New: Comma separated list
         val PAYEE_NAME_KEY = stringPreferencesKey("payee_name")
         val RECENT_AMOUNTS_KEY = stringPreferencesKey("recent_amounts")
         val SHOW_UPI_ID_KEY = booleanPreferencesKey("show_upi_id")
     }
 
-    // Get the UPI ID
-    // This returns a Flow<String?>. Think of 'Flow' as an Observable in RxJS or a stream.
-    // Compose will "react" to changes in this flow automatically.
-    val upiId: Flow<String?> = context.dataStore.data.map { preferences -> preferences[UPI_ID_KEY] }
+    // Get the UPI ID (First one is default/primary)
+    // Legacy support: If ID list is empty, fall back to single ID key
+    val upiIds: Flow<List<String>> = context.dataStore.data.map { preferences ->
+        val rawIds = preferences[UPI_IDS_KEY]
+        if (!rawIds.isNullOrBlank()) {
+            rawIds.split(",").filter { it.isNotBlank() }
+        } else {
+            // Fallback to legacy key if new key hasn't been set yet
+            val legacyId = preferences[UPI_ID_KEY]
+            if (!legacyId.isNullOrBlank()) listOf(legacyId) else emptyList()
+        }
+    }
+
+    // Maintained for potential backward compatibility access, though upiIds is preferred
+    val upiId: Flow<String?> = upiIds.map { it.firstOrNull() }
+
+
     val payeeName: Flow<String?> =
         context.dataStore.data.map { preferences -> preferences[PAYEE_NAME_KEY] }
 
@@ -39,10 +53,23 @@ class UserStore(private val context: Context) {
     val showUpiId: Flow<Boolean> =
         context.dataStore.data.map { preferences -> preferences[SHOW_UPI_ID_KEY] ?: true }
 
-    // Save the UPI ID
-    // This is a 'suspend' function, meaning it's asynchronous
+    // Save the UPI IDs list
+    suspend fun saveUpiIds(ids: List<String>) {
+        context.dataStore.edit { preferences ->
+            preferences[UPI_IDS_KEY] = ids.joinToString(",")
+            // Also update legacy key for safety/fallback with the primary ID
+            if (ids.isNotEmpty()) {
+                preferences[UPI_ID_KEY] = ids.first()
+            } else {
+                preferences.remove(UPI_ID_KEY)
+            }
+        }
+    }
+
+    // Deprecated: Use saveUpiIds instead. Kept for minimal disruption if needed.
+    // This will overwrite the entire list with just this one ID.
     suspend fun saveUpiId(id: String) {
-        context.dataStore.edit { preferences -> preferences[UPI_ID_KEY] = id }
+        saveUpiIds(listOf(id))
     }
 
     suspend fun savePayeeName(name: String) {
